@@ -1,4 +1,5 @@
 const fs = require('fs');
+const bcrypt = require('./bcrypt');
 
 class Producto {
   async getAll(req, res) {
@@ -13,10 +14,11 @@ class Producto {
     const data = await JSON.parse(
       fs.readFileSync(`./data/productos.json`, { encoding: 'utf-8' }),
     );
-    console.log(insertData);
     insertData.id = data[data.length - 1].id + 1;
-    console.log(insertData);
+    let hash = await bcrypt.create(JSON.stringify(insertData));
+    insertData.integrety = hash;
     data.push(insertData);
+    console.log(hash);
     await fs.promises.writeFile(`./data/productos.json`, JSON.stringify(data));
     return res.json({ producto: 'Producto creado' });
   }
