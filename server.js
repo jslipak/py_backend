@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
-const producto = require('./services/Producto');
+const Routes = require('./routes');
+const producto = require('./services/Producto.service');
 const port = 8080;
 app.use(express.json());
 app.use(
@@ -8,13 +9,10 @@ app.use(
     extended: true,
   }),
 );
-
 app.get('/', function (req, res) {
   res.send('hello world');
 });
-app.get('/productos', producto.getAll);
-app.get('/productos/:id', producto.getById);
-app.post('/productos', producto.create);
+app.use('/api', Routes);
 
 const server = app.listen(port, () => {
   console.log(`Servidor corriendo en el puerto:${port}`);
